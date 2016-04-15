@@ -1,29 +1,22 @@
 package ru.stanislavkulikov.energoplan;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.View;
 
-public class MainListActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    private static final int CM_DELETE_ID = 1;
+public class MainListActivity extends AppCompatActivity implements
+        AddNewHomesteadFragment.OnFragmentInteractionListener, MainListFragment.OnFragmentInteractionListener {
 
     DataBase myDataBase;
-    SimpleCursorAdapter scAdapter;
-    ListView lvData;
+    FragmentTransaction fTrans;
+    MainListFragment mainListFragment;
+    AddNewHomesteadFragment newHomesteadFragment;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +29,21 @@ public class MainListActivity extends AppCompatActivity implements LoaderCallbac
         myDataBase = new DataBase(this);
         myDataBase.open();
 
-        // формируем столбцы сопоставления
-        String[] from = new String[] { DataBase.HOMESTEAD_NUMBER_COLUMN, DataBase.FIO_COLUMN };
-        int[] to = new int[] { R.id.homesteadTextView, R.id.fioTextView };
+        fTrans = getSupportFragmentManager().beginTransaction();
+        mainListFragment = new MainListFragment();
+        fTrans.add(R.id.fragmentContainer, mainListFragment);
+        fTrans.commit();
 
-        // создааем адаптер и настраиваем список
-        scAdapter = new SimpleCursorAdapter(this, R.layout.main_list_item, null, from, to, 0);
-        lvData = (ListView) findViewById(R.id.mainListView);
-        lvData.setAdapter(scAdapter);
-
-        // добавляем контекстное меню к списку
-        registerForContextMenu(lvData);
-
-        // создаем лоадер для чтения данных
-        getSupportLoaderManager().initLoader(0, null, this);
-
-        // добавляем запись в базу по нажатию кнопки
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_button);
+        // открываем фрагмент новой записи по нажатию кнопки
+        fab = (FloatingActionButton) findViewById(R.id.add_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myDataBase.addRec();
-                getSupportLoaderManager().getLoader(0).forceLoad();
+                fTrans = getSupportFragmentManager().beginTransaction();
+                newHomesteadFragment = new AddNewHomesteadFragment();
+                fTrans.replace(R.id.fragmentContainer, newHomesteadFragment);
+                fTrans.commit();
+                view.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -90,56 +76,11 @@ public class MainListActivity extends AppCompatActivity implements LoaderCallbac
         return super.onOptionsItemSelected(item);
     }
 
-
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
-    }
-
-    public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == CM_DELETE_ID) {
-            // получаем из пункта контекстного меню данные по пункту списка
-            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
-                    .getMenuInfo();
-            // извлекаем id записи и удаляем соответствующую запись в БД
-            myDataBase.delRec(acmi.id);
-            // получаем новый курсор с данными
-            getSupportLoaderManager().getLoader(0).forceLoad();
-            return true;
-        }
-        return super.onContextItemSelected(item);
-    }
-
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, myDataBase);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
-    static class MyCursorLoader extends CursorLoader {
-
-        DataBase myDataBase;
-
-        public MyCursorLoader(Context context, DataBase myDataBase) {
-            super(context);
-            this.myDataBase = myDataBase;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            Cursor cursor = myDataBase.getAllData();
-            return cursor;
-        }
-
+    public void onFragmentAddNewHomestead() {
+        fTrans = getSupportFragmentManager().beginTransaction();
+        fTrans.replace(R.id.fragmentContainer, mainListFragment);
+        fTrans.commit();
+        fab.setVisibility(View.VISIBLE);
+        getSupportLoaderManager().getLoader(0).forceLoad();
     }
 }

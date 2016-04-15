@@ -46,13 +46,13 @@ public class DataBase {
     }
 
     // добавить запись в DB_TABLE
-    public void addRec() {
+    public void addRec(HomesteadModel homesteadModel) {
 
         ContentValues values = new ContentValues();
-        values.put(DataBase.HOMESTEAD_NUMBER_COLUMN, "123");
-        values.put(DataBase.FIO_COLUMN, "Иванов Иван Иванович");
-        values.put(DataBase.PHONE_COLUMN, "4954553443");
-        values.put(DataBase.FEEDER_COLUMN, "3А");
+        values.put(DataBase.HOMESTEAD_NUMBER_COLUMN, homesteadModel.getHomesteadNumberColumn());
+        values.put(DataBase.FIO_COLUMN, homesteadModel.getFioColumn());
+        values.put(DataBase.PHONE_COLUMN, homesteadModel.getPhoneColumn());
+        values.put(DataBase.FEEDER_COLUMN, homesteadModel.getFeederColumn());
         // Вставляем данные в таблицу
         mDB.insert(DATABASE_TABLE_HOMESTEAD, null, values);
     }
@@ -73,7 +73,7 @@ public class DataBase {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("create table " + DATABASE_TABLE_HOMESTEAD + " ("
                     + COLUMN_ID + " integer primary key autoincrement, "
-                    + HOMESTEAD_NUMBER_COLUMN + " integer not null, "
+                    + HOMESTEAD_NUMBER_COLUMN + " text not null, "
                     + FIO_COLUMN + " text, "
                     + PHONE_COLUMN + " text, "
                     + FEEDER_COLUMN + " text);");
