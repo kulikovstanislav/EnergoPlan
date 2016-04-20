@@ -45,6 +45,20 @@ public class DataBase {
         return mDB.query(DATABASE_TABLE_HOMESTEAD, null, null, null, null, null, null);
     }
 
+    //получить запись по id
+    public HomesteadModel getRec(int id) {
+        Cursor cursor = mDB.rawQuery("select * from " + DATABASE_TABLE_HOMESTEAD + " where " + COLUMN_ID + " = " + Integer.toString(id), null);
+        HomesteadModel homesteadModel = new HomesteadModel();
+        if (cursor.moveToFirst()) {
+            homesteadModel.setHomesteadNumberColumn(cursor.getString(cursor.getColumnIndex(HOMESTEAD_NUMBER_COLUMN)));
+            homesteadModel.setFioColumn(cursor.getString(cursor.getColumnIndex(FIO_COLUMN)));
+            homesteadModel.setPhoneColumn(cursor.getString(cursor.getColumnIndex(PHONE_COLUMN)));
+            homesteadModel.setFeederColumn(cursor.getString(cursor.getColumnIndex(FEEDER_COLUMN)));
+        }
+        cursor.close();
+        return homesteadModel;
+    }
+
     // добавить запись в DB_TABLE
     public void addRec(HomesteadModel homesteadModel) {
 

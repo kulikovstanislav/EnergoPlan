@@ -1,5 +1,6 @@
 package ru.stanislavkulikov.energoplan;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -10,12 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class MainListActivity extends AppCompatActivity implements
-        AddNewHomesteadFragment.OnFragmentInteractionListener, MainListFragment.OnFragmentInteractionListener {
+        AddNewHomesteadFragment.OnFragmentInteractionListener,
+        MainListFragment.OnFragmentInteractionListener,
+        HomesteadFragment.OnFragmentInteractionListener {
 
     DataBase myDataBase;
     FragmentTransaction fTrans;
     MainListFragment mainListFragment;
     AddNewHomesteadFragment newHomesteadFragment;
+    HomesteadFragment homesteadFragment;
     private FloatingActionButton fab;
 
     @Override
@@ -82,5 +86,20 @@ public class MainListActivity extends AppCompatActivity implements
         fTrans.commit();
         fab.setVisibility(View.VISIBLE);
         getSupportLoaderManager().getLoader(0).forceLoad();
+    }
+
+    public void onHomesteadListItemClick(Cursor cursor) {
+        fTrans = getSupportFragmentManager().beginTransaction();
+        homesteadFragment = HomesteadFragment.newInstance(cursor.getInt(cursor.getColumnIndex(DataBase.COLUMN_ID)));
+        fTrans.replace(R.id.fragmentContainer, homesteadFragment);
+        fTrans.commit();
+        fab.setVisibility(View.INVISIBLE);
+    }
+
+    public void onFragmentBackPressed() {
+        fTrans = getSupportFragmentManager().beginTransaction();
+        fTrans.replace(R.id.fragmentContainer, mainListFragment);
+        fTrans.commit();
+        fab.setVisibility(View.VISIBLE);
     }
 }

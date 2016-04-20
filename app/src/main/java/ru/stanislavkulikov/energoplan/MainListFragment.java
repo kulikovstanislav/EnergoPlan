@@ -87,6 +87,15 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
         lvData = (ListView) view.findViewById(R.id.mainListView);
         lvData.setAdapter(scAdapter);
 
+        // нажатие на элемент списка
+        lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Cursor cursor = (Cursor) scAdapter.getItem(position);
+                mListener.onHomesteadListItemClick(cursor);
+            }
+        });
+
         // создаем лоадер для чтения данных
         getActivity().getSupportLoaderManager().initLoader(0, null, this);
 
@@ -146,8 +155,7 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
+        void onHomesteadListItemClick(Cursor cursor);
     }
 
     @Override
