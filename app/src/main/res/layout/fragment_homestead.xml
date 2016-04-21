@@ -47,6 +47,20 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/counterListView" />
+
+        </LinearLayout>
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

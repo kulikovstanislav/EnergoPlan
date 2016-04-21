@@ -117,7 +117,7 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
                     .getMenuInfo();
             // извлекаем id записи и удаляем соответствующую запись в БД
-            myDataBase.delRec(acmi.id);
+            myDataBase.delHomesteadRec(acmi.id);
             // получаем новый курсор с данными
             getActivity().getSupportLoaderManager().getLoader(0).forceLoad();
             return true;
@@ -160,7 +160,7 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(getContext(), myDataBase);
+        return new MainListCursorLoader(getContext(), myDataBase);
     }
 
     @Override
@@ -172,18 +172,18 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    static class MyCursorLoader extends CursorLoader {
+    static class MainListCursorLoader extends CursorLoader {
 
         DataBase myDataBase;
 
-        public MyCursorLoader(Context context, DataBase myDataBase) {
+        public MainListCursorLoader(Context context, DataBase myDataBase) {
             super(context);
             this.myDataBase = myDataBase;
         }
 
         @Override
         public Cursor loadInBackground() {
-            Cursor cursor = myDataBase.getAllData();
+            Cursor cursor = myDataBase.getAllHomesteadData();
             return cursor;
         }
 

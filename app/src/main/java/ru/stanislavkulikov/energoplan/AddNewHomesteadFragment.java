@@ -79,7 +79,7 @@ public class AddNewHomesteadFragment extends Fragment {
                     HomesteadModel homesteadModel = new HomesteadModel();
                     homesteadModel.setHomesteadNumberColumn(newHomesteadNumEditText.getText().toString());
                     homesteadModel.setFioColumn(newFIOEditText.getText().toString());
-                    myDataBase.addRec(homesteadModel);
+                    myDataBase.addHomesteadRec(homesteadModel);
                     mListener.onFragmentAddNewHomestead();
                 }
             }
