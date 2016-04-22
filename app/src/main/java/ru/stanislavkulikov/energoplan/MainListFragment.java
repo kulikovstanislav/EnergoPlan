@@ -105,7 +105,7 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
         return view;
     }
 
-        public void onCreateContextMenu(ContextMenu menu, View v,
+    public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);

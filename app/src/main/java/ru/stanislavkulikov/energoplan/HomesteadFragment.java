@@ -9,10 +9,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import android.widget.TextView;
 public class HomesteadFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_PARAM_ID = "param_id";
+    private static final int CM_DELETE_ID = 1;
 
     private int paramId;
     private SimpleCursorAdapter scAdapter;
@@ -81,6 +85,9 @@ public class HomesteadFragment extends Fragment implements LoaderManager.LoaderC
         // создаем лоадер для чтения данных
         getActivity().getSupportLoaderManager().restartLoader(1, null, this);
 
+        // добавляем контекстное меню к списку
+        registerForContextMenu(lvData);
+
         HomesteadModel homesteadModel = myDataBase.getHomesteadRec(paramId);
         TextView fioTextView = (TextView) view.findViewById(R.id.homesteadFioText);
         fioTextView.setText(homesteadModel.getFioColumn());
@@ -114,6 +121,27 @@ public class HomesteadFragment extends Fragment implements LoaderManager.LoaderC
         } );
         return view;
     }
+
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == CM_DELETE_ID) {
+            // получаем из пункта контекстного меню данные по пункту списка
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
+                    .getMenuInfo();
+            // извлекаем id записи и удаляем соответствующую запись в БД
+            myDataBase.delCounterRec(acmi.id);
+            // получаем новый курсор с данными
+            getActivity().getSupportLoaderManager().getLoader(1).forceLoad();
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
