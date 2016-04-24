@@ -15,6 +15,8 @@ public class DataBase {
     // имя таблицы
     public static final String DATABASE_TABLE_HOMESTEAD = "homestead";
     public static final String DATABASE_TABLE_COUNTER = "counter";
+    public static final String DATABASE_TABLE_INDICATION = "indication";
+    public static final String DATABASE_TABLE_PAYMENT = "payment";
     // названия столбцов
     public static final String COLUMN_ID = "_id";
 
@@ -25,6 +27,11 @@ public class DataBase {
 
     public static final String COUNTER_NAME_COLUMN = "counter_name";
     public static final String HOMESTEAD_ID_COLUMN = "homestead_id";
+
+    public static final String COUNTER_ID_COLUMN = "counter_id";
+    public static final String INDICATIONS_COLUMN = "indications_column";
+    public static final String PAYMENT_COLUMN = "payment_column";
+    public static final String DATE_COLUMN = "date_column";
 
     private final Context mCtx;
     private DBHelper mDBHelper;
@@ -52,6 +59,14 @@ public class DataBase {
 
     public Cursor getAllCounterData(Integer id) {
         return mDB.rawQuery("select * from " + DATABASE_TABLE_COUNTER + " where " + HOMESTEAD_ID_COLUMN + " = " + Integer.toString(id), null);
+    }
+
+    public Cursor getAllIndicationsData(Integer id) {
+        return mDB.rawQuery("select * from " + DATABASE_TABLE_INDICATION + " where " + COUNTER_ID_COLUMN + " = " + Integer.toString(id), null);
+    }
+
+    public Cursor getAllPAymentData(Integer id) {
+        return mDB.rawQuery("select * from " + DATABASE_TABLE_PAYMENT + " where " + COUNTER_ID_COLUMN + " = " + Integer.toString(id), null);
     }
 
     //получить запись по id
@@ -89,6 +104,24 @@ public class DataBase {
         mDB.insert(DATABASE_TABLE_COUNTER, null, values);
     }
 
+    public void addIndicationRec(IndicationModel indicationModel) {
+        ContentValues values = new ContentValues();
+        values.put(DataBase.COUNTER_ID_COLUMN, indicationModel.getCounterId());
+        values.put(DataBase.DATE_COLUMN, indicationModel.getDate().getTime()/1000);
+        values.put(DataBase.INDICATIONS_COLUMN, indicationModel.getIndication());
+        // Вставляем данные в таблицу
+        mDB.insert(DATABASE_TABLE_INDICATION, null, values);
+    }
+
+    public void addPaymentRec(PaymentModel paymentModel) {
+        ContentValues values = new ContentValues();
+        values.put(DataBase.COUNTER_ID_COLUMN, paymentModel.getCounterId());
+        values.put(DataBase.DATE_COLUMN, paymentModel.getDate().getTime()/1000);
+        values.put(DataBase.INDICATIONS_COLUMN, paymentModel.getPayment());
+        // Вставляем данные в таблицу
+        mDB.insert(DATABASE_TABLE_PAYMENT, null, values);
+    }
+
     // удалить запись из DB_TABLE
     public void delHomesteadRec(long id) {
         mDB.delete(DATABASE_TABLE_HOMESTEAD, COLUMN_ID + " = " + id, null);
@@ -96,6 +129,14 @@ public class DataBase {
 
     public void delCounterRec(long id) {
         mDB.delete(DATABASE_TABLE_COUNTER, COLUMN_ID + " = " + id, null);
+    }
+
+    public void delIndicationRec(long id) {
+        mDB.delete(DATABASE_TABLE_INDICATION, COLUMN_ID + " = " + id, null);
+    }
+
+    public void delPaymentRec(long id) {
+        mDB.delete(DATABASE_TABLE_PAYMENT, COLUMN_ID + " = " + id, null);
     }
 
     // класс по созданию и управлению БД
@@ -117,6 +158,16 @@ public class DataBase {
                     + COLUMN_ID + " integer primary key autoincrement, "
                     + HOMESTEAD_ID_COLUMN + " integer not null, "
                     + COUNTER_NAME_COLUMN + " text not null);");
+            db.execSQL("create table " + DATABASE_TABLE_INDICATION + " ("
+                    + COLUMN_ID + " integer primary key autoincrement, "
+                    + COUNTER_ID_COLUMN + " integer not null, "
+                    + DATE_COLUMN + " integer, "
+                    + INDICATIONS_COLUMN + " real);");
+            db.execSQL("create table " + DATABASE_TABLE_PAYMENT + " ("
+                    + COLUMN_ID + " integer primary key autoincrement, "
+                    + COUNTER_ID_COLUMN + " integer not null, "
+                    + DATE_COLUMN + " integer, "
+                    + PAYMENT_COLUMN + " real);");
         }
 
         @Override
