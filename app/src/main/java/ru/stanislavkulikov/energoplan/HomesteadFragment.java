@@ -82,6 +82,15 @@ public class HomesteadFragment extends Fragment implements LoaderManager.LoaderC
         lvData = (ListView) view.findViewById(R.id.counterListView);
         lvData.setAdapter(scAdapter);
 
+        // нажатие на элемент списка
+        lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Cursor cursor = (Cursor) scAdapter.getItem(position);
+                mListener.onCounterElementListPressed(cursor);
+            }
+        });
+
         // создаем лоадер для чтения данных
         getActivity().getSupportLoaderManager().restartLoader(1, null, this);
 
@@ -142,14 +151,6 @@ public class HomesteadFragment extends Fragment implements LoaderManager.LoaderC
         return super.onContextItemSelected(item);
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -181,6 +182,7 @@ public class HomesteadFragment extends Fragment implements LoaderManager.LoaderC
      */
     public interface OnFragmentInteractionListener {
         void onFragmentBackPressed();
+        void onCounterElementListPressed(Cursor cursor);
     }
 
     @Override

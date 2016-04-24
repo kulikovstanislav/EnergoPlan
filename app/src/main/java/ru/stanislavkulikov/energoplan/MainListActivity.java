@@ -13,13 +13,15 @@ import android.view.View;
 public class MainListActivity extends AppCompatActivity implements
         AddNewHomesteadFragment.OnFragmentInteractionListener,
         MainListFragment.OnFragmentInteractionListener,
-        HomesteadFragment.OnFragmentInteractionListener {
+        HomesteadFragment.OnFragmentInteractionListener,
+        IndicationListFragment.OnFragmentInteractionListener {
 
     DataBase myDataBase;
     FragmentTransaction fTrans;
     MainListFragment mainListFragment;
     AddNewHomesteadFragment newHomesteadFragment;
     HomesteadFragment homesteadFragment;
+    IndicationListFragment indicationListFragment;
     private FloatingActionButton fab;
 
     @Override
@@ -101,5 +103,13 @@ public class MainListActivity extends AppCompatActivity implements
         fTrans.replace(R.id.fragmentContainer, mainListFragment);
         fTrans.commit();
         fab.setVisibility(View.VISIBLE);
+    }
+
+    public void onCounterElementListPressed(Cursor cursor) {
+        fTrans = getSupportFragmentManager().beginTransaction();
+        indicationListFragment = IndicationListFragment.newInstance(cursor.getInt(cursor.getColumnIndex(DataBase.COLUMN_ID)));
+        fTrans.replace(R.id.fragmentContainer, indicationListFragment);
+        fTrans.addToBackStack(null);
+        fTrans.commit();
     }
 }
