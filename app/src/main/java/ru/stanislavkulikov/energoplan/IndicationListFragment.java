@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +88,11 @@ public class IndicationListFragment extends Fragment {
 
         tabHost.setCurrentTabByTag("tabSpecTagInd");
 
+        IndicationListViewFragment indicationListViewFragment = IndicationListViewFragment.newInstance(paramId);
+        FragmentTransaction fTrans = getActivity().getSupportFragmentManager().beginTransaction();
+        fTrans.add(R.id.tabIndicationLayout, indicationListViewFragment);
+        fTrans.commit();
+
         // обработчик переключения вкладок
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             public void onTabChanged(String tabId) {
@@ -95,13 +101,6 @@ public class IndicationListFragment extends Fragment {
         });
 
         return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override

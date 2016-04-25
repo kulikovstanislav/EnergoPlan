@@ -10,11 +10,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.Date;
+import java.util.Random;
+
 public class MainListActivity extends AppCompatActivity implements
         AddNewHomesteadFragment.OnFragmentInteractionListener,
         MainListFragment.OnFragmentInteractionListener,
         HomesteadFragment.OnFragmentInteractionListener,
-        IndicationListFragment.OnFragmentInteractionListener {
+        IndicationListFragment.OnFragmentInteractionListener,
+        IndicationListViewFragment.OnFragmentInteractionListener{
 
     DataBase myDataBase;
     FragmentTransaction fTrans;
@@ -111,5 +115,14 @@ public class MainListActivity extends AppCompatActivity implements
         fTrans.replace(R.id.fragmentContainer, indicationListFragment);
         fTrans.addToBackStack(null);
         fTrans.commit();
+    }
+
+    public void onFragmentIndicationListAddButton(int counterId) {
+        IndicationModel indicationModel = new IndicationModel();
+        indicationModel.setCounterId(counterId);
+        indicationModel.setDate(new Date());
+        Random ran = new Random();
+        indicationModel.setIndication(ran.nextInt(100) + 100);
+        myDataBase.addIndicationRec(indicationModel);
     }
 }
