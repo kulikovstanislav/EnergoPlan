@@ -93,6 +93,11 @@ public class IndicationListFragment extends Fragment {
         fTrans.add(R.id.tabIndicationLayout, indicationListViewFragment);
         fTrans.commit();
 
+        PaymentListViewFragment paymentListViewFragment = PaymentListViewFragment.newInstance(paramId);
+        fTrans = getActivity().getSupportFragmentManager().beginTransaction();
+        fTrans.add(R.id.tabPaymentLayout, paymentListViewFragment);
+        fTrans.commit();
+
         // обработчик переключения вкладок
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             public void onTabChanged(String tabId) {

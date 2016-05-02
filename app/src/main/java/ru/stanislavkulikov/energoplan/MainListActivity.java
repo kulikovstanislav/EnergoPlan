@@ -18,7 +18,8 @@ public class MainListActivity extends AppCompatActivity implements
         MainListFragment.OnFragmentInteractionListener,
         HomesteadFragment.OnFragmentInteractionListener,
         IndicationListFragment.OnFragmentInteractionListener,
-        IndicationListViewFragment.OnFragmentInteractionListener{
+        IndicationListViewFragment.OnFragmentInteractionListener,
+        PaymentListViewFragment.OnFragmentInteractionListener {
 
     DataBase myDataBase;
     FragmentTransaction fTrans;
@@ -124,5 +125,14 @@ public class MainListActivity extends AppCompatActivity implements
         Random ran = new Random();
         indicationModel.setIndication(ran.nextInt(100) + 100);
         myDataBase.addIndicationRec(indicationModel);
+    }
+
+    public void onFragmentPaymentListAddButton(int counterId) {
+        PaymentModel paymentModel = new PaymentModel();
+        paymentModel.setCounterId(counterId);
+        paymentModel.setDate(new Date());
+        Random ran = new Random();
+        paymentModel.setPayment(ran.nextInt(100) + 100);
+        myDataBase.addPaymentRec(paymentModel);
     }
 }

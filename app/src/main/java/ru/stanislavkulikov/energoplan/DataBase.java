@@ -65,7 +65,7 @@ public class DataBase {
         return mDB.rawQuery("select * from " + DATABASE_TABLE_INDICATION + " where " + COUNTER_ID_COLUMN + " = " + Integer.toString(id), null);
     }
 
-    public Cursor getAllPAymentData(Integer id) {
+    public Cursor getAllPaymentData(Integer id) {
         return mDB.rawQuery("select * from " + DATABASE_TABLE_PAYMENT + " where " + COUNTER_ID_COLUMN + " = " + Integer.toString(id), null);
     }
 
@@ -117,7 +117,7 @@ public class DataBase {
         ContentValues values = new ContentValues();
         values.put(DataBase.COUNTER_ID_COLUMN, paymentModel.getCounterId());
         values.put(DataBase.DATE_COLUMN, paymentModel.getDate().getTime()/1000);
-        values.put(DataBase.INDICATIONS_COLUMN, paymentModel.getPayment());
+        values.put(DataBase.PAYMENT_COLUMN, paymentModel.getPayment());
         // Вставляем данные в таблицу
         mDB.insert(DATABASE_TABLE_PAYMENT, null, values);
     }
