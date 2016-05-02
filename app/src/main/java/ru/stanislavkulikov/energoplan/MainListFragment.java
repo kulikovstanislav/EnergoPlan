@@ -79,8 +79,8 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
         View view = inflater.inflate(R.layout.content_main_list, container, false);
 
         // формируем столбцы сопоставления
-        String[] from = new String[] { DataBase.HOMESTEAD_NUMBER_COLUMN, DataBase.FIO_COLUMN };
-        int[] to = new int[] { R.id.homesteadTextView, R.id.fioTextView };
+        String[] from = new String[] { DataBase.HOMESTEAD_NUMBER_COLUMN, DataBase.FIO_COLUMN, DataBase.INDICATIONS_COLUMN };
+        int[] to = new int[] { R.id.homesteadTextView, R.id.fioTextView, R.id.indicationMainTextView };
 
         // создааем адаптер и настраиваем список
         scAdapter = new SimpleCursorAdapter(getContext(), R.layout.main_list_item, null, from, to, 0);
@@ -183,7 +183,7 @@ public class MainListFragment extends Fragment implements LoaderManager.LoaderCa
 
         @Override
         public Cursor loadInBackground() {
-            Cursor cursor = myDataBase.getAllHomesteadData();
+            Cursor cursor = myDataBase.getAllHomesteadDataLefJoin();
             return cursor;
         }
 

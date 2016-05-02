@@ -1,7 +1,6 @@
 package ru.stanislavkulikov.energoplan;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,9 +21,11 @@ import android.widget.Toast;
  */
 public class IndicationListFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM_ID = "param_id";
+    private static final String ARG_COUNTER_ID = "counter_id";
+    private static final String ARG_HOMESTEAD_ID = "homestead_id";
 
-    private int paramId;
+    private int counterId;
+    private int homesteadId;
 
     private OnFragmentInteractionListener mListener;
 
@@ -36,14 +37,14 @@ public class IndicationListFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param paramId Parameter ID.
+     * @param counterId Parameter ID.
      * @return A new instance of fragment IndicationListFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static IndicationListFragment newInstance(int paramId) {
+    public static IndicationListFragment newInstance(int counterId, int homesteadId) {
         IndicationListFragment fragment = new IndicationListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM_ID, paramId);
+        args.putInt(ARG_COUNTER_ID, counterId);
+        args.putInt(ARG_HOMESTEAD_ID, homesteadId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +53,8 @@ public class IndicationListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            paramId = getArguments().getInt(ARG_PARAM_ID);
+            counterId = getArguments().getInt(ARG_COUNTER_ID);
+            homesteadId = getArguments().getInt(ARG_HOMESTEAD_ID);
         }
     }
 
@@ -88,12 +90,12 @@ public class IndicationListFragment extends Fragment {
 
         tabHost.setCurrentTabByTag("tabSpecTagInd");
 
-        IndicationListViewFragment indicationListViewFragment = IndicationListViewFragment.newInstance(paramId);
+        IndicationListViewFragment indicationListViewFragment = IndicationListViewFragment.newInstance(counterId, homesteadId);
         FragmentTransaction fTrans = getActivity().getSupportFragmentManager().beginTransaction();
         fTrans.add(R.id.tabIndicationLayout, indicationListViewFragment);
         fTrans.commit();
 
-        PaymentListViewFragment paymentListViewFragment = PaymentListViewFragment.newInstance(paramId);
+        PaymentListViewFragment paymentListViewFragment = PaymentListViewFragment.newInstance(counterId, homesteadId);
         fTrans = getActivity().getSupportFragmentManager().beginTransaction();
         fTrans.add(R.id.tabPaymentLayout, paymentListViewFragment);
         fTrans.commit();

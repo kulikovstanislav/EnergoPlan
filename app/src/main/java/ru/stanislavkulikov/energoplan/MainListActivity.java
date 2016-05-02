@@ -108,28 +108,31 @@ public class MainListActivity extends AppCompatActivity implements
         fTrans.replace(R.id.fragmentContainer, mainListFragment);
         fTrans.commit();
         fab.setVisibility(View.VISIBLE);
+        getSupportLoaderManager().getLoader(0).forceLoad();
     }
 
-    public void onCounterElementListPressed(Cursor cursor) {
+    public void onCounterElementListPressed(Cursor cursor, int homesteadId) {
         fTrans = getSupportFragmentManager().beginTransaction();
-        indicationListFragment = IndicationListFragment.newInstance(cursor.getInt(cursor.getColumnIndex(DataBase.COLUMN_ID)));
+        indicationListFragment = IndicationListFragment.newInstance(cursor.getInt(cursor.getColumnIndex(DataBase.COLUMN_ID)), homesteadId);
         fTrans.replace(R.id.fragmentContainer, indicationListFragment);
         fTrans.addToBackStack(null);
         fTrans.commit();
     }
 
-    public void onFragmentIndicationListAddButton(int counterId) {
+    public void onFragmentIndicationListAddButton(int counterId, int homesteadId) {
         IndicationModel indicationModel = new IndicationModel();
         indicationModel.setCounterId(counterId);
+        indicationModel.setHomesteadId(homesteadId);
         indicationModel.setDate(new Date());
         Random ran = new Random();
         indicationModel.setIndication(ran.nextInt(100) + 100);
         myDataBase.addIndicationRec(indicationModel);
     }
 
-    public void onFragmentPaymentListAddButton(int counterId) {
+    public void onFragmentPaymentListAddButton(int counterId, int homesteadId) {
         PaymentModel paymentModel = new PaymentModel();
         paymentModel.setCounterId(counterId);
+        paymentModel.setHomesteadId(homesteadId);
         paymentModel.setDate(new Date());
         Random ran = new Random();
         paymentModel.setPayment(ran.nextInt(100) + 100);

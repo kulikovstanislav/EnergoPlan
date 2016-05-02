@@ -25,9 +25,11 @@ import android.widget.ListView;
  */
 public class PaymentListViewFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private static final String ARG_PARAM_ID = "param_id";
+    private static final String ARG_COUNTER_ID = "counter_id";
+    private static final String ARG_HOMESTED_ID = "homestead_id";
 
-    private int paramId;
+    private int counterId;
+    private int homesteadId;
     private SimpleCursorAdapter scAdapter;
     private ListView lvData;
     private DataBase myDataBase;
@@ -42,14 +44,15 @@ public class PaymentListViewFragment extends Fragment implements LoaderManager.L
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param paramId Parameter ID.
+     * @param counterId Parameter ID.
      * @return A new instance of fragment PaymentListViewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PaymentListViewFragment newInstance(int paramId) {
+    public static PaymentListViewFragment newInstance(int counterId, int homesteadId) {
         PaymentListViewFragment fragment = new PaymentListViewFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM_ID, paramId);
+        args.putInt(ARG_COUNTER_ID, counterId);
+        args.putInt(ARG_HOMESTED_ID, homesteadId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +61,8 @@ public class PaymentListViewFragment extends Fragment implements LoaderManager.L
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            paramId = getArguments().getInt(ARG_PARAM_ID);
+            counterId = getArguments().getInt(ARG_COUNTER_ID);
+            homesteadId = getArguments().getInt(ARG_HOMESTED_ID);
         }
     }
 
@@ -84,7 +88,7 @@ public class PaymentListViewFragment extends Fragment implements LoaderManager.L
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onFragmentPaymentListAddButton(paramId);
+                mListener.onFragmentPaymentListAddButton(counterId, homesteadId);
                 getActivity().getSupportLoaderManager().getLoader(3).forceLoad();
             }
         });
@@ -122,12 +126,12 @@ public class PaymentListViewFragment extends Fragment implements LoaderManager.L
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentPaymentListAddButton(int counterId);
+        void onFragmentPaymentListAddButton(int counterId, int homesteadId);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new PaymentsCursorLoader(getContext(), myDataBase, paramId);
+        return new PaymentsCursorLoader(getContext(), myDataBase, counterId);
     }
 
     @Override

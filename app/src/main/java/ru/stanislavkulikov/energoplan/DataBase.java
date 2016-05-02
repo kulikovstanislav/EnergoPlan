@@ -31,7 +31,8 @@ public class DataBase {
     public static final String COUNTER_ID_COLUMN = "counter_id";
     public static final String INDICATIONS_COLUMN = "indications_column";
     public static final String PAYMENT_COLUMN = "payment_column";
-    public static final String DATE_COLUMN = "date_column";
+    public static final String DATE_INDICATIONS_COLUMN = "date_indications_column";
+    public static final String DATE_PAYMENT_COLUMN = "date_payment_column";
 
     private final Context mCtx;
     private DBHelper mDBHelper;
@@ -55,6 +56,13 @@ public class DataBase {
     // получить все данные из таблицы DB_TABLE
     public Cursor getAllHomesteadData() {
         return mDB.query(DATABASE_TABLE_HOMESTEAD, null, null, null, null, null, null);
+    }
+
+    public Cursor getAllHomesteadDataLefJoin() {
+        return mDB.rawQuery("select hom.*, ind." + INDICATIONS_COLUMN + ", ind." + DATE_INDICATIONS_COLUMN + " from " + DATABASE_TABLE_HOMESTEAD
+                + " hom left join ( select " + INDICATIONS_COLUMN + ", " + HOMESTEAD_ID_COLUMN + ", max(" + DATE_INDICATIONS_COLUMN + ") as "
+                + DATE_INDICATIONS_COLUMN + " from " + DATABASE_TABLE_INDICATION  + " group by " + HOMESTEAD_ID_COLUMN + ") ind on hom."
+                + COLUMN_ID + " = ind." + HOMESTEAD_ID_COLUMN, null);
     }
 
     public Cursor getAllCounterData(Integer id) {
@@ -107,7 +115,8 @@ public class DataBase {
     public void addIndicationRec(IndicationModel indicationModel) {
         ContentValues values = new ContentValues();
         values.put(DataBase.COUNTER_ID_COLUMN, indicationModel.getCounterId());
-        values.put(DataBase.DATE_COLUMN, indicationModel.getDate().getTime()/1000);
+        values.put(DataBase.HOMESTEAD_ID_COLUMN, indicationModel.getHomesteadId());
+        values.put(DataBase.DATE_INDICATIONS_COLUMN, indicationModel.getDate().getTime()/1000);
         values.put(DataBase.INDICATIONS_COLUMN, indicationModel.getIndication());
         // Вставляем данные в таблицу
         mDB.insert(DATABASE_TABLE_INDICATION, null, values);
@@ -116,7 +125,8 @@ public class DataBase {
     public void addPaymentRec(PaymentModel paymentModel) {
         ContentValues values = new ContentValues();
         values.put(DataBase.COUNTER_ID_COLUMN, paymentModel.getCounterId());
-        values.put(DataBase.DATE_COLUMN, paymentModel.getDate().getTime()/1000);
+        values.put(DataBase.HOMESTEAD_ID_COLUMN, paymentModel.getHomesteadId());
+        values.put(DataBase.DATE_PAYMENT_COLUMN, paymentModel.getDate().getTime()/1000);
         values.put(DataBase.PAYMENT_COLUMN, paymentModel.getPayment());
         // Вставляем данные в таблицу
         mDB.insert(DATABASE_TABLE_PAYMENT, null, values);
@@ -161,12 +171,14 @@ public class DataBase {
             db.execSQL("create table " + DATABASE_TABLE_INDICATION + " ("
                     + COLUMN_ID + " integer primary key autoincrement, "
                     + COUNTER_ID_COLUMN + " integer not null, "
-                    + DATE_COLUMN + " integer, "
+                    + HOMESTEAD_ID_COLUMN + " integer not null, "
+                    + DATE_INDICATIONS_COLUMN + " integer, "
                     + INDICATIONS_COLUMN + " real);");
             db.execSQL("create table " + DATABASE_TABLE_PAYMENT + " ("
                     + COLUMN_ID + " integer primary key autoincrement, "
                     + COUNTER_ID_COLUMN + " integer not null, "
-                    + DATE_COLUMN + " integer, "
+                    + HOMESTEAD_ID_COLUMN + " integer not null, "
+                    + DATE_PAYMENT_COLUMN + " integer, "
                     + PAYMENT_COLUMN + " real);");
         }
 

@@ -7,6 +7,7 @@ public class IndicationModel {
     private Integer counterId;
     private float indication;
     private Date date;
+    private Integer homesteadId;
 
     public Integer getCounterId() {
         return counterId;
@@ -30,5 +31,13 @@ public class IndicationModel {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getHomesteadId() {
+        return homesteadId;
+    }
+
+    public void setHomesteadId(Integer homesteadId) {
+        this.homesteadId = homesteadId;
     }
 }

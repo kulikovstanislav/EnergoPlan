@@ -25,9 +25,11 @@ import android.widget.ListView;
  */
 public class IndicationListViewFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private static final String ARG_PARAM_ID = "param_id";
+    private static final String ARG_COUNTER_ID = "counter_id";
+    private static final String ARG_HOMESTEAD_ID = "homestead_id";
 
-    private int paramId;
+    private int counterId;
+    private int homesteadId;
     private SimpleCursorAdapter scAdapter;
     private ListView lvData;
     private DataBase myDataBase;
@@ -42,14 +44,14 @@ public class IndicationListViewFragment extends Fragment implements LoaderManage
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param paramId Parameter ID.
+     * @param counterId Parameter ID.
      * @return A new instance of fragment IndicationListViewFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static IndicationListViewFragment newInstance(int paramId) {
+    public static IndicationListViewFragment newInstance(int counterId, int homesteadId) {
         IndicationListViewFragment fragment = new IndicationListViewFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM_ID, paramId);
+        args.putInt(ARG_COUNTER_ID, counterId);
+        args.putInt(ARG_HOMESTEAD_ID, homesteadId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +60,8 @@ public class IndicationListViewFragment extends Fragment implements LoaderManage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            paramId = getArguments().getInt(ARG_PARAM_ID);
+            counterId = getArguments().getInt(ARG_COUNTER_ID);
+            homesteadId = getArguments().getInt(ARG_HOMESTEAD_ID);
         }
     }
 
@@ -84,7 +87,7 @@ public class IndicationListViewFragment extends Fragment implements LoaderManage
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onFragmentIndicationListAddButton(paramId);
+                mListener.onFragmentIndicationListAddButton(counterId, homesteadId);
                 getActivity().getSupportLoaderManager().getLoader(2).forceLoad();
             }
         });
@@ -123,12 +126,12 @@ public class IndicationListViewFragment extends Fragment implements LoaderManage
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentIndicationListAddButton(int counterId);
+        void onFragmentIndicationListAddButton(int counterId, int homesteadId);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new IndicationsCursorLoader(getContext(), myDataBase, paramId);
+        return new IndicationsCursorLoader(getContext(), myDataBase, counterId);
     }
 
     @Override

@@ -7,6 +7,7 @@ public class PaymentModel {
     private Integer counterId;
     private float payment;
     private Date date;
+    private Integer homesteadId;
 
     public Integer getCounterId() {
         return counterId;
@@ -30,5 +31,13 @@ public class PaymentModel {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getHomesteadId() {
+        return homesteadId;
+    }
+
+    public void setHomesteadId(Integer homesteadId) {
+        this.homesteadId = homesteadId;
     }
 }

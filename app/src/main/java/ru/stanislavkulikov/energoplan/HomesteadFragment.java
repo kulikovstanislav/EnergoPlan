@@ -87,7 +87,7 @@ public class HomesteadFragment extends Fragment implements LoaderManager.LoaderC
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Cursor cursor = (Cursor) scAdapter.getItem(position);
-                mListener.onCounterElementListPressed(cursor);
+                mListener.onCounterElementListPressed(cursor, paramId);
             }
         });
 
@@ -182,7 +182,7 @@ public class HomesteadFragment extends Fragment implements LoaderManager.LoaderC
      */
     public interface OnFragmentInteractionListener {
         void onFragmentBackPressed();
-        void onCounterElementListPressed(Cursor cursor);
+        void onCounterElementListPressed(Cursor cursor, int paramId);
     }
 
     @Override
